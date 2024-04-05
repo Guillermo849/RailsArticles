@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rails - Users</title>
+  </head>
+
+  <body>
+    <h1> Users </h1>
+    <% @users.each do |u| %>
+        <p><%= u.first_name %></p>
+    <% end %>
+
+    <%= link_to "New User", "users/new"%>
+  </body>
+</html>
