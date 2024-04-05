@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Users Creation</title>
+  </head>
+
+  <body>
+    <h1> Users Creation </h1>
+    <%= form_with model: @users, url: 'create', method: :post, local: false do |f|%>
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %><br>
+      <%= f.label :surname %>
+      <%= f.text_field :surname %><br>
+      <%= f.label :age %>
+      <%= f.text_field :age %><br>
+      <%= f.submit %>
+    <% end %>
+  </body>
+</html>
