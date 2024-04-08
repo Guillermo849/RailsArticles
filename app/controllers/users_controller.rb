@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params.require(:user).permit(:first_name, :surname, :age))
     if @user.save
-      flash[:success] = "New to-do item successfully added! #{@user.valid?}"
+      flash[:success] = "New to-do item successfully added!"
       redirect_to users_url
     else
       flash.now[:error] = "To-do item creation failed"
