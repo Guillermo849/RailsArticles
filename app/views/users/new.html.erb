@@ -6,7 +6,7 @@
 
   <body>
     <h1> Users Creation </h1>
-    <%= form_with model: @users, url: 'create', method: :post, local: false do |f|%>
+    <%= form_with model: @user, url: 'create', method: :post, local: false do |f|%>
       <%= f.label :first_name %>
       <%= f.text_field :first_name %><br>
       <%= f.label :surname %>

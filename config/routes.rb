@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   #root to: redirect('users#index')
 
-  get 'users', to: 'users#index'
-  post 'users/create', to: 'users#create'
-  get 'users/new', to: 'users#new', as: 'new_users'
+  get 'user', to: 'users#index'
+  post 'user/create', to: 'users#create'
+  get 'user/new', to: 'users#new', as: 'new_users'
 end
