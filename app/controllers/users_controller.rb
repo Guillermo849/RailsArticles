@@ -1,4 +1,8 @@
+# frozen
+
 class UsersController < ApplicationController
+  before_action :set_user, only: %i[delete show]
+
   def index
     @user = User.all
   end
@@ -9,7 +13,17 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find_by_id(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = 'User not found'
+    redirect_to users_url
+  end
+
+  def delete
+    if @user.destroy
+      redirect_to users_url
+    else
+      flash[:error] = "User couldn't be delteted"
+    end
   end
 
   def create
@@ -21,5 +35,11 @@ class UsersController < ApplicationController
       flash.now[:error] = "To-do item creation failed"
       render :new
     end
+  end
+
+  private
+
+  def set_user
+    @user = User.find(params[:id])
   end
 end
