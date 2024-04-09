@@ -1,7 +1,7 @@
-# frozen
+# frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[delete show]
+  before_action :set_user, only: %i[destroy show]
 
   def index
     @user = User.all
@@ -12,27 +12,24 @@ class UsersController < ApplicationController
     render :new
   end
 
-  def show
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = 'User not found'
-    redirect_to users_url
-  end
+  def show; end
 
-  def delete
+  def destroy
     if @user.destroy
+      flash[:notification] = 'User successfully deleted'
       redirect_to users_url
     else
-      flash[:error] = "User couldn't be delteted"
+      flash[:alert] = "User couldn't be deleted"
     end
   end
 
   def create
     @user = User.new(params.require(:user).permit(:first_name, :surname, :age))
     if @user.save
-      flash[:success] = "New to-do item successfully added!"
+      flash[:notification] = 'New users successfully created'
       redirect_to users_url
     else
-      flash.now[:error] = "To-do item creation failed"
+      flash.now[:alert] = 'User creation failed'
       render :new
     end
   end
@@ -41,5 +38,8 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = 'User not found'
+    redirect_to users_path
   end
 end

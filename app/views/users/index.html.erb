@@ -5,6 +5,10 @@
   <% end %>
 
   <%= link_to "New User", "users/new"%>
-</body>
 
-# add flash notification
+  <% flash.each do |type, msg| %>
+    <div class="alert alert-info">
+      <%= msg %>
+    </div>
+  <% end %>
+</body>
