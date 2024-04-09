@@ -7,7 +7,7 @@
   <body>
     <h1> Users </h1>
     <% @user.each do |u| %>
-        <p><%= u.first_name %> <%= u.surname %> <%= u.age %> </p>
+        <p><%= link_to u.first_name, user_path(u.id) %> </p>
     <% end %>
 
     <%= link_to "New User", "users/new"%>
