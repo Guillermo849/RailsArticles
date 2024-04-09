@@ -3,4 +3,5 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@rails/ujs"
 import "popper"
-import "bootstrap" 
+import "bootstrap"
+//= require bootstrap-sprockets

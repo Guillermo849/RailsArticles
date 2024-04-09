@@ -16,10 +16,10 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      flash[:notification] = 'User successfully updated'
+      flash[:success] = 'User successfully updated'
       redirect_to users_path
     else
-      flash.now[:alert] = 'User update failed'
+      flash.now[:danger] = 'User update failed'
       render :edit
     end
   end
@@ -28,20 +28,20 @@ class UsersController < ApplicationController
 
   def destroy
     if @user.destroy
-      flash[:notification] = 'User successfully deleted'
+      flash[:success] = 'User successfully deleted'
       redirect_to users_url
     else
-      flash[:alert] = "User couldn't be deleted"
+      flash[:danger] = "User couldn't be deleted"
     end
   end
 
   def create
     @user = User.new(user_params)
     if @user.save
-      flash[:notification] = 'New users successfully created'
+      flash[:success] = 'New users successfully created'
       redirect_to users_url
     else
-      flash.now[:alert] = 'User creation failed'
+      flash.now[:danger] = 'User creation failed'
       render :new
     end
   end
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   def set_user
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] = 'User not found'
+    flash[:danger] = 'User not found'
     redirect_to users_path
   end
 

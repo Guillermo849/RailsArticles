@@ -7,7 +7,7 @@
 <p> <%= link_to "Back", users_path %> </p>
 
 <% flash.each do |type, msg| %>
-    <div class="alert alert-info">
+    <div class="alert alert-<%= type %> alert-dismissible">
         <%= msg %>
     </div>
 <% end %>
