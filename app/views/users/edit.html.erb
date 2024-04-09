@@ -1,0 +1,17 @@
+<h2>Edit User, <%= @user.first_name %>.</h2>
+
+<%= form_with model: @user, method: :PUT, local: false do |f| %>
+  <%= f.label :first_name %>
+  <%= f.text_field :first_name %><br>
+  <%= f.label :surname %> 
+  <%= f.text_field :surname %><br>
+  <%= f.label :age %>
+  <%= f.text_field :age %><br>
+  <%= f.submit "Update User" %>
+<% end %>
+
+<% flash.each do |type, msg| %>
+  <div class="alert alert-info">
+    <%= msg %>
+  </div>
+<% end %>

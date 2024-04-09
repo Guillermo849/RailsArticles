@@ -1,12 +1,13 @@
-<body>
-    <h2> <%= @user.first_name %> <%= @user.surname %> </h2> 
-    <p> <%= @user.age %> </p>
-    <p> <%= button_to "Destroy", @user, method: :delete %> </p>
-    <p> <%= link_to "Back", users_path %> </p>
+<h2> <%= @user.first_name %> <%= @user.surname %> </h2> 
+<p> <%= @user.age %> </p>
+<p>
+    <%= button_to "Update", edit_user_path(@user), method: :get %>
+    <%= button_to "Destroy", @user, method: :delete %>
+</p>
+<p> <%= link_to "Back", users_path %> </p>
 
-    <% flash.each do |type, msg| %>
-        <div class="alert alert-info">
-            <%= msg %>
-        </div>
-    <% end %>
-</body>
+<% flash.each do |type, msg| %>
+    <div class="alert alert-info">
+        <%= msg %>
+    </div>
+<% end %>
