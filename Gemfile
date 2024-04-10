@@ -73,8 +73,8 @@ end
 
 gem "cssbundling-rails", "~> 1.4"
 
-gem "bootstrap"
+gem "bootstrap", ">= 4.3.1"
 
-gem "sassc-rails"
+gem "sassc-rails", ">= 2.1.2"
 
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', ">= 3.4.1"
