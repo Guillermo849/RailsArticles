@@ -1,0 +1,15 @@
+<body>
+  <h1> Articles </h1>
+  <%= link_to "Users", "users#index"%>
+  <% @article.each do |a| %>
+      <p><%= link_to a.title, article_path(a.id) %> </p>
+  <% end %>
+
+  <%= link_to "New article", "articles/new"%>
+
+  <% flash.each do |type, msg| %>
+    <div class="alert alert-<%= type %> alert-dismissible">
+      <%= msg %>
+    </div>
+  <% end %>
+</body>

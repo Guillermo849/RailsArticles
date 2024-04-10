@@ -6,6 +6,14 @@
 </p>
 <p> <%= link_to "Back", users_path %> </p>
 
+<h3> <%= @user.first_name %> Articles </h3>
+
+<p> <%= link_to "New Article", "/articles/new" %> </p>
+
+<% @user.articles.each do |a| %>
+    <p><%= link_to a.title, article_path(a.id) %> </p>
+<% end %>
+
 <% flash.each do |type, msg| %>
     <div class="alert alert-<%= type %> alert-dismissible">
         <%= msg %>

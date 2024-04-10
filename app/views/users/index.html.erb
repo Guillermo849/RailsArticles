@@ -1,5 +1,8 @@
 <body>
   <h1> Users </h1>
+
+  <%= link_to "Articles", "articles#index"%>
+
   <% @user.each do |u| %>
       <p><%= link_to u.first_name, user_path(u.id) %> </p>
   <% end %>
