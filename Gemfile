@@ -76,8 +76,10 @@ end
 
 gem "cssbundling-rails", "~> 1.4"
 
-gem "bootstrap", ">= 4.3.1"
-
 gem "sassc-rails", ">= 2.1.2"
 
 gem 'bootstrap-sass', ">= 3.4.1"
+
+gem "net-http", '~> 0.4.1'
+
+gem 'rails-controller-testing', '>= 1.0.5'
