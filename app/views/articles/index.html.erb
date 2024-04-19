@@ -1,7 +1,7 @@
 <body>
   <h1> Articles </h1>
   <%= link_to "Users", "users#index"%>
-  <% @article.each do |a| %>
+  <% @articles.each do |a| %>
       <p><%= link_to a.title, article_path(a.id) %> </p>
   <% end %>
 

@@ -3,7 +3,7 @@
 
   <%= link_to "Articles", "articles#index"%>
 
-  <% @user.each do |u| %>
+  <% @users.each do |u| %>
       <p><%= link_to u.first_name, user_path(u.id) %> </p>
   <% end %>
 

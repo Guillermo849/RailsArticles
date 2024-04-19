@@ -1,29 +1,37 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'factories/articles'
 
 RSpec.describe Article, type: :model do
-  let(:article) { FactoryBot.build(:article) }
+  let(:article) { create :article }
+  let(:user) { create :user }
 
-  context 'Should validate' do
-    it 'with title, body and user present' do
-      expect(article).to be_valid
-    end
-  end
+  describe 'validations' do
+    context 'presence of' do
+      it do
+        expect(subject).to validate_presence_of(:title)
+        expect(subject).to validate_presence_of(:body)
+        expect(subject).to validate_presence_of(:user_id)
+      end
 
-  context 'Should not be valid' do
-    it 'when title is not present' do
-      article.title = nil
-      expect(article).not_to be_valid
-    end
-
-    it 'when body is not present' do
-      article.body = nil
-      expect(article).not_to be_valid
+      it do
+        expect(User.where(id: article.user_id)).to exist
+      end
     end
 
-    it 'when user_id is not present' do
-      article.user = nil
-      expect(article).not_to be_valid
+    context 'it belongs to user' do
+      it do
+        expect do
+          Article.create(
+            title: 'Something',
+            body: 'Another thing',
+            user_id: article.user_id
+          )
+        end.to change {
+                 Article.where(user_id: article.user_id).count
+               }.by(1)
+      end
     end
   end
 end
