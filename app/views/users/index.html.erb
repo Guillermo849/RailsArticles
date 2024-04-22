@@ -3,8 +3,8 @@
 
   <%= link_to "Articles", "articles#index"%>
 
-  <% @users.each do |u| %>
-      <p><%= link_to u.first_name, user_path(u.id) %> </p>
+  <% @users.each do |user| %>
+      <p><%= link_to user.first_name, user_path(user.id) %> </p>
   <% end %>
 
   <%= link_to "New User", "users/new"%>

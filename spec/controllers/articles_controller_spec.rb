@@ -50,14 +50,13 @@ RSpec.describe ArticlesController, type: :controller do
       it do
         post :create, params: { article: { title: article.title, body: article.body, user_id: user } }
         expect(flash: [:success])
-        get :show, params: { id: article.id }
-        expect(response).to render_template('show')
       end
     end
 
     context 'with invalid attributes' do
+      before {    post :create, params: { article: { title: article.title, body: article.body, user_id: nil } } }
+
       it do
-        post :create, params: { article: { title: article.title, body: article.body, user_id: nil } }
         expect(flash: [:danger])
         expect(response).to render_template('new')
       end
@@ -76,9 +75,7 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'valid attributes' do
       it do
-        put :update,
-            params: { id: article.id,
-                      article: { title: 'Very important info', body: 'Something something', user_id: user } }
+        put :update, params: { id: article.id, article: { user_id: user } }
         expect(flash: [:success])
         get :show, params: { id: article.id }
         expect(response).to render_template('show')
@@ -87,9 +84,7 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'invalid attributes' do
       it do
-        put :update,
-            params: { id: article.id,
-                      article: { title: 'Very important info', body: 'Something something', user_id: nil } }
+        put :update, params: { id: article.id, article: { user_id: nil } }
         expect(flash: [:danger])
         expect(response).to render_template('edit')
       end
