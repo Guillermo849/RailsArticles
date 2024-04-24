@@ -29,7 +29,7 @@ RSpec.describe UsersController, type: :controller do
 
       it do
         expect(response).to redirect_to(users_path)
-        expect(flash: [:danger])
+        expect(flash[:danger]).to eq('User not found')
       end
     end
   end
@@ -46,16 +46,14 @@ RSpec.describe UsersController, type: :controller do
     context 'with valid attributes' do
       it do
         post :create, params: { user: { first_name: user.first_name, surname: user.surname, age: user.age } }
-        expect(flash: [:success])
-        get :show, params: { id: user.id }
-        expect(response).to render_template('show')
+        expect(flash[:success]).to eq('New users successfully created')
       end
     end
 
     context 'with invalid attributes' do
       it do
         post :create, params: { user: { first_name: nil, surname: user.surname, age: user.age } }
-        expect(flash: [:danger])
+        expect(flash[:danger]).to eq('User creation failed')
         expect(response).to render_template('new')
       end
     end
@@ -72,7 +70,7 @@ RSpec.describe UsersController, type: :controller do
     context 'valid attributes' do
       it do
         put :update, params: { id: user.id, user: { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
-        expect(flash: [:success])
+        expect(flash[:success]).to eq('User successfully updated')
         get :show, params: { id: user.id }
         expect(response).to render_template('show')
       end
@@ -81,7 +79,7 @@ RSpec.describe UsersController, type: :controller do
     context 'invalid attributes' do
       it do
         put :update, params: { id: user.id, user: { first_name: nil, surname: 'NewSurname', age: 7 } }
-        expect(flash: [:danger])
+        expect(flash[:danger]).to eq('User update failed')
         expect(response).to render_template('edit')
       end
     end
@@ -93,7 +91,7 @@ RSpec.describe UsersController, type: :controller do
     context 'delete an existing user' do
       it do
         delete :destroy, params: { id: user.id }
-        expect(flash: [:success])
+        expect(flash[:success]).to eq('User successfully deleted')
         expect(Article.where(user_id: article.user_id).count).to be 0
         get :index
         expect(response).to render_template('index')

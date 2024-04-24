@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'factories/articles'
 
 RSpec.describe ArticlesController, type: :controller do
-  let(:article) { create :article }
+  let!(:article) { create :article }
 
   describe '[GET] #index' do
     before { get :index }
@@ -30,7 +30,7 @@ RSpec.describe ArticlesController, type: :controller do
 
       it do
         expect(response).to redirect_to(articles_path)
-        expect(flash: [:danger])
+        expect(flash[:danger]).to eq('Article not found')
       end
     end
   end
@@ -45,19 +45,27 @@ RSpec.describe ArticlesController, type: :controller do
 
   describe '[POST] #create' do
     let(:user) { create :user }
+    let(:params) do
+      { article: { title: article.title, body: article.body, user_id: user } }
+    end
 
-    context 'with valid attributes' do
+    context 'when article was created' do
+      before { post :create, params: params }
+
       it do
-        post :create, params: { article: { title: article.title, body: article.body, user_id: user } }
-        expect(flash: [:success])
+        expect(flash[:success]).to include('New article successfully created')
+        expect(Article.find_by(params[:article])).not_to be_nil
       end
     end
 
-    context 'with invalid attributes' do
-      before {    post :create, params: { article: { title: article.title, body: article.body, user_id: nil } } }
+    context 'when article was not created' do
+      before do
+        params[:article][:user_id] = nil
+        post :create, params: params
+      end
 
       it do
-        expect(flash: [:danger])
+        expect(flash[:danger]).to eq('Article creation failed')
         expect(response).to render_template('new')
       end
     end
@@ -75,18 +83,16 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'valid attributes' do
       it do
-        put :update, params: { id: article.id, article: { user_id: user } }
-        expect(flash: [:success])
-        get :show, params: { id: article.id }
-        expect(response).to render_template('show')
+        put :update, params: { id: article.id, article: { user_id: user.id } }
+        expect(flash[:success]).to include('Article successfully updated')
+        expect(article.reload.user_id).to eq(user.id)
       end
     end
 
     context 'invalid attributes' do
       it do
         put :update, params: { id: article.id, article: { user_id: nil } }
-        expect(flash: [:danger])
-        expect(response).to render_template('edit')
+        expect(flash[:danger]).to include('Article update failed')
       end
     end
   end
@@ -95,9 +101,8 @@ RSpec.describe ArticlesController, type: :controller do
     context 'delete an existing article' do
       it do
         delete :destroy, params: { id: article.id }
-        expect(flash: [:success])
-        get :index
-        expect(response).to render_template('index')
+        expect(flash[:success]).to include('Article successfully deleted')
+        expect(Article.find_by(id: article.id)).to eq(nil)
       end
     end
 

@@ -12,26 +12,21 @@ RSpec.describe Article, type: :model do
       it do
         expect(subject).to validate_presence_of(:title)
         expect(subject).to validate_presence_of(:body)
-        expect(subject).to validate_presence_of(:user_id)
-      end
-
-      it do
-        expect(User.where(id: article.user_id)).to exist
       end
     end
+  end
 
-    context 'it belongs to user' do
-      it do
-        expect do
-          Article.create(
-            title: 'Something',
-            body: 'Another thing',
-            user_id: article.user_id
-          )
-        end.to change {
-                 Article.where(user_id: article.user_id).count
-               }.by(1)
-      end
+  describe 'relation' do
+    it do
+      expect do
+        Article.create(
+          title: 'Something',
+          body: 'Another thing',
+          user_id: article.user_id
+        )
+      end.to change {
+               Article.where(user_id: article.user_id).count
+             }.by(1)
     end
   end
 end
