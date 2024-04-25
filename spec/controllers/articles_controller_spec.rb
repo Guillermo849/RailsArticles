@@ -25,7 +25,7 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
 
-    context 'article was not found' do
+    context 'when article was not found' do
       before { get :show, params: { id: 10_000 } }
 
       it do
@@ -38,7 +38,7 @@ RSpec.describe ArticlesController, type: :controller do
   describe '[GET] #new' do
     before { get :new }
 
-    it 'renders new article template' do
+    it do
       expect(response).to render_template('new')
     end
   end
@@ -72,26 +72,42 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[GET] #edit' do
-    it 'render edit template' do
-      get :edit, params: { id: article.id }
-      expect(response).to render_template('edit')
+    context 'when article found' do
+      before { get :edit, params: { id: article.id } }
+
+      it do
+        expect(response).to render_template('edit')
+      end
+      it do
+        expect(assigns(:article)).to eq(article)
+      end
+    end
+
+    context 'when article found' do
+      before { get :edit, params: { id: 10_000 } }
+
+      it do
+        expect(flash[:danger]).to include('Article not found')
+      end
     end
   end
 
   describe '[PUT] #update' do
     let(:user) { create :user }
 
-    context 'valid attributes' do
+    context 'when params are valid' do
+      before { put :update, params: { id: article.id, article: { user_id: user.id } } }
+
       it do
-        put :update, params: { id: article.id, article: { user_id: user.id } }
         expect(flash[:success]).to include('Article successfully updated')
         expect(article.reload.user_id).to eq(user.id)
       end
     end
 
-    context 'invalid attributes' do
+    context 'when params are not valid' do
+      before { put :update, params: { id: article.id, article: { user_id: nil } } }
+
       it do
-        put :update, params: { id: article.id, article: { user_id: nil } }
         expect(flash[:danger]).to include('Article update failed')
       end
     end
@@ -99,16 +115,18 @@ RSpec.describe ArticlesController, type: :controller do
 
   describe '[DELETE] #destroy' do
     context 'delete an existing article' do
+      before { delete :destroy, params: { id: article.id } }
+
       it do
-        delete :destroy, params: { id: article.id }
         expect(flash[:success]).to include('Article successfully deleted')
         expect(Article.find_by(id: article.id)).to eq(nil)
       end
     end
 
     context 'delete a non-existent article' do
+      before { delete :destroy, params: { id: 10_000 } }
+
       it do
-        delete :destroy, params: { id: 10_000 }
         expect(flash[:danger]).to include('Article not found')
       end
     end

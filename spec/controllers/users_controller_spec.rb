@@ -43,16 +43,26 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[POST] #create' do
-    context 'with valid attributes' do
+    context 'when params are valid' do
+      before do
+        post :create, params: {
+          user: { first_name: user.first_name, surname: user.surname, age: user.age }
+        }
+      end
+
       it do
-        post :create, params: { user: { first_name: user.first_name, surname: user.surname, age: user.age } }
         expect(flash[:success]).to eq('New users successfully created')
       end
     end
 
-    context 'with invalid attributes' do
+    context 'when params are not valid' do
+      before do
+        post :create, params: {
+          user: { first_name: nil, surname: user.surname, age: user.age }
+        }
+      end
+
       it do
-        post :create, params: { user: { first_name: nil, surname: user.surname, age: user.age } }
         expect(flash[:danger]).to eq('User creation failed')
         expect(response).to render_template('new')
       end
@@ -60,25 +70,46 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[GET] #edit' do
-    it 'render edit template' do
-      get :edit, params: { id: user.id }
-      expect(response).to render_template('edit')
+    context 'when user is found' do
+      before { get :edit, params: { id: user.id } }
+
+      it do
+        expect(response).to render_template('edit')
+      end
+    end
+
+    context 'when user is not found' do
+      before { get :edit, params: { id: 10_000 } }
+
+      it do
+        expect(flash[:danger]).to include('User not found')
+      end
     end
   end
 
   describe '[PUT] #update' do
-    context 'valid attributes' do
+    context 'when valid params' do
+      before do
+        put :update, params: {
+          id: user.id,
+          user: { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 }
+        }
+      end
+
       it do
-        put :update, params: { id: user.id, user: { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
         expect(flash[:success]).to eq('User successfully updated')
-        get :show, params: { id: user.id }
-        expect(response).to render_template('show')
       end
     end
 
-    context 'invalid attributes' do
+    context 'when invalid params' do
+      before do
+        put :update, params: {
+          id: user.id,
+          user: { first_name: nil, surname: 'NewSurname', age: 7 }
+        }
+      end
+
       it do
-        put :update, params: { id: user.id, user: { first_name: nil, surname: 'NewSurname', age: 7 } }
         expect(flash[:danger]).to eq('User update failed')
         expect(response).to render_template('edit')
       end
@@ -89,18 +120,18 @@ RSpec.describe UsersController, type: :controller do
     let(:article) { Article.create(title: 'Something', body: 'Another thing', user_id: user.id) }
 
     context 'delete an existing user' do
+      before { delete :destroy, params: { id: user.id } }
+
       it do
-        delete :destroy, params: { id: user.id }
         expect(flash[:success]).to eq('User successfully deleted')
         expect(Article.where(user_id: article.user_id).count).to be 0
-        get :index
-        expect(response).to render_template('index')
       end
     end
 
     context 'delete a non-existent user' do
+      before { delete :destroy, params: { id: 10_000 } }
+
       it do
-        delete :destroy, params: { id: 10_000 }
         expect(flash[:danger]).to include('User not found')
       end
     end

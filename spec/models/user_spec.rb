@@ -7,15 +7,11 @@ RSpec.describe User, type: :model do
   let(:user) { create :user }
 
   describe 'validations' do
-    context 'presence of' do
+    context 'when presence of' do
       it do
         expect(subject).to validate_presence_of(:first_name)
         expect(subject).to validate_presence_of(:surname)
-        expect(subject).to validate_presence_of(:age)
-      end
-
-      it do
-        expect(user.age).to be_a_kind_of(Integer)
+        expect(subject).to validate_inclusion_of(:age).in_range(1..120)
       end
     end
   end
