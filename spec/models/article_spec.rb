@@ -17,7 +17,7 @@ RSpec.describe Article, type: :model do
 
   describe 'relation' do
     it do
-      should belong_to(:user).required
+      expect(subject).to belong_to(:user)
     end
   end
 end

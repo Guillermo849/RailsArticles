@@ -43,11 +43,10 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[POST] #create' do
+    let(:params) { { first_name: user.first_name, surname: user.surname, age: user.age } }
     context 'when params are valid' do
       before do
-        post :create, params: {
-          user: { first_name: user.first_name, surname: user.surname, age: user.age }
-        }
+        post :create, params: { user: params }
       end
 
       it do
@@ -75,6 +74,7 @@ RSpec.describe UsersController, type: :controller do
 
       it do
         expect(response).to render_template('edit')
+        expect(assigns(:user)).to eq(user)
       end
     end
 
@@ -88,15 +88,14 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[PUT] #update' do
+    let(:params) { { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
     context 'when valid params' do
       before do
-        put :update, params: {
-          id: user.id,
-          user: { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 }
-        }
+        put :update, params: { id: user.id, user: params }
       end
 
       it do
+        expect(User.find_by(*params[:user], id: user.id)).not_to be nil
         expect(flash[:success]).to eq('User successfully updated')
       end
     end
@@ -117,14 +116,14 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[DELETE] #destroy' do
-    let(:article) { Article.create(title: 'Something', body: 'Another thing', user_id: user.id) }
-
+    let(:article) { build :article, user_id: user }
     context 'delete an existing user' do
       before { delete :destroy, params: { id: user.id } }
 
       it do
         expect(flash[:success]).to eq('User successfully deleted')
-        expect(Article.where(user_id: article.user_id).count).to be 0
+        expect(User.find_by(id: user.id)).to be nil
+        expect(Article.find_by(id: article.id)).to be nil
       end
     end
 
