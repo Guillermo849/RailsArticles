@@ -77,8 +77,6 @@ RSpec.describe ArticlesController, type: :controller do
 
       it do
         expect(response).to render_template('edit')
-      end
-      it do
         expect(assigns(:article)).to eq(article)
       end
     end
