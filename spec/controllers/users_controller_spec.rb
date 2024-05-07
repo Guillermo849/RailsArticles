@@ -50,6 +50,7 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it do
+        expect(User.find_by(*params[:user], id: user.id)).not_to be nil
         expect(flash[:success]).to eq('New users successfully created')
       end
     end
