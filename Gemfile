@@ -50,6 +50,8 @@ gem 'bootstrap-sass', ">= 3.4.1"
 
 gem "net-http", '~> 0.4.1'
 
+gem 'devise', '~> 4.9'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
