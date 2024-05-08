@@ -50,9 +50,6 @@ class UsersController < ApplicationController
 
   def set_user
     @user = current_user
-  rescue ActiveRecord::RecordNotFound
-    flash[:danger] = 'User not found'
-    redirect_to users_path
   end
 
   def user_params
