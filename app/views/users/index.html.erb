@@ -9,6 +9,8 @@
 
   <%= link_to "New User", "users/new"%>
 
+  <%= button_to "logout", destroy_user_session_path, method: :delete%>
+
   <% flash.each do |type, msg| %>
     <div class="alert alert-<%= type %> alert-dismissible">
       <%= msg %>
