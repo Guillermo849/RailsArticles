@@ -11,14 +11,16 @@ class ArticlesController < ApplicationController
     @article = Article.new
   end
 
-  def edit; end
+  def edit
+    @user = current_user
+  end
 
   def show; end
 
   def update
     if @article.update(article_params)
       flash[:success] = 'Article successfully updated'
-      redirect_to article_path
+      redirect_to user_article_path
     else
       flash.now[:danger] = 'Article update failed'
       render :edit
@@ -28,7 +30,7 @@ class ArticlesController < ApplicationController
   def destroy
     if @article.destroy
       flash[:success] = 'Article successfully deleted'
-      redirect_to articles_url
+      redirect_to user_articles_url
     else
       flash[:danger] = "Article couldn't be deleted"
     end
@@ -38,7 +40,7 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
     if @article.save
       flash[:success] = 'New article successfully created'
-      redirect_to article_url(@article.id)
+      redirect_to user_article_url(current_user.id, @article.id)
     else
       flash.now[:danger] = 'Article creation failed'
       render :new
@@ -51,7 +53,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     flash[:danger] = 'Article not found'
-    redirect_to articles_url
+    redirect_to user_articles_url
   end
 
   def article_params

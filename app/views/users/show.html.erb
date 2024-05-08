@@ -1,5 +1,21 @@
-<h2> <%= @user.first_name %> <%= @user.surname %> </h2> 
-<p> <%= @user.age %> </p>
+<table>
+  <tr>
+    <th>First Name: </th>
+    <th><%= @user.first_name %></th>
+  </tr>
+  <tr>
+    <th>Surname: </th>
+    <th><%= @user.surname %></th>
+  </tr>
+  <tr>
+    <th>Age: </th>
+    <th><%= @user.age %></th>
+  </tr>
+  <tr>
+    <th>Gmail:</th>
+    <th><%= @user.email %></th>
+  </tr>
+</table>
 <p>
     <%= button_to "Update", edit_user_path(@user), method: :get %>
     <%= button_to "Destroy", @user, method: :delete %>
@@ -8,10 +24,10 @@
 
 <h3> <%= @user.first_name %> Articles </h3>
 
-<p> <%= link_to "New Article", "/articles/new" %> </p>
+<p> <%= link_to "New Article", new_user_article_url(current_user.id) %> </p>
 
 <% @user.articles.each do |a| %>
-    <p><%= link_to a.title, article_path(a.id) %> </p>
+    <p><%= link_to a.title, user_article_path(current_user.id, a.id) %> </p>
 <% end %>
 
 <% flash.each do |type, msg| %>

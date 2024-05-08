@@ -1,6 +1,6 @@
 <h2>Edit Article, <%= @article.title %>.</h2>
 
-<%= form_with model: @article, method: :PUT, local: false do |f| %>
+<%= form_for([@user, @article], method: :put, url: user_article_path(@user, @article)) do |f| %>
   <%= f.label :title %>
   <%= f.text_field :title %><br>
   <%= f.label :body %> 
