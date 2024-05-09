@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
+require 'factories/articles'
+require 'factories/users'
 
 RSpec.describe ArticlesController, type: :controller do
   include Devise::Test::ControllerHelpers
@@ -10,8 +11,10 @@ RSpec.describe ArticlesController, type: :controller do
   let!(:user) { create :user }
 
   describe '[GET] #index' do
-    before { sign_in user }
-    before { get :index, params: { user_id: user.id } }
+    before do
+      sign_in user
+      get :index, params: { user_id: user.id } 
+    end
 
     it do
       expect(assigns(:articles)).to eq([article])
@@ -41,8 +44,10 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[GET] #new' do
-    before { sign_in user }
-    before { get :new, params: { user_id: user.id } }
+    before do
+      sign_in user
+      get :new, params: { user_id: user.id } 
+    end
 
     it do
       expect(response).to render_template('new')

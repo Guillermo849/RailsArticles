@@ -6,6 +6,6 @@ FactoryBot.define do
     surname { 'MyString' }
     age { 1 }
     email { Faker::Internet.email }
-    password { Faker::Password.password(min_length: 8) }
+    password { Faker::Internet.password(min_length: 8) }
   end
 end

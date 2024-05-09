@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'factories/articles'
+require 'factories/users'
 
 RSpec.describe UsersController, type: :controller do
+  include Devise::Test::ControllerHelpers
+
   let(:user) do
-    byebug 
-    create :user 
+    create :user
   end
 
   describe '[GET] #index' do
-    before { sign_in user }
-    before { get :index }
+    before do
+      sign_in user
+      get :index
+    end
 
     it do
       expect(assigns(:users)).to eq([user])
@@ -19,9 +24,11 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[GET] #show' do
-    before { sign_in user }
     context 'when user was found' do
-      before { get :show, params: { id: user.id } }
+      before do
+        sign_in user
+        get :show, params: { id: user.id }
+      end
 
       it do
         expect(assigns(:user)).to eq(user)
@@ -34,7 +41,6 @@ RSpec.describe UsersController, type: :controller do
     before do
       sign_in user
       get :new
-      byebug
     end
 
     it 'renders new user template' do
@@ -75,9 +81,11 @@ RSpec.describe UsersController, type: :controller do
   # end
 
   describe '[GET] #edit' do
-    before { sign_in user }
     context 'when user is found' do
-      before { get :edit, params: { id: user.id } }
+      before do
+        sign_in user
+        get :edit, params: { id: user.id }
+      end
 
       it do
         expect(response).to render_template('edit')
@@ -116,10 +124,12 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[DELETE] #destroy' do
-    before { sign_in user }
     let(:article) { build :article, user_id: user }
     context 'delete an existing user' do
-      before { delete :destroy, params: { id: user.id } }
+      before do
+        sign_in user
+        delete :destroy, params: { id: user.id }
+      end
 
       it do
         expect(flash[:success]).to eq('User successfully deleted')
