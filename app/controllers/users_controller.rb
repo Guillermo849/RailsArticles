@@ -35,16 +35,17 @@ class UsersController < ApplicationController
     end
   end
 
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      flash[:success] = 'New users successfully created'
-      redirect_to users_url
-    else
-      flash.now[:danger] = 'User creation failed'
-      render :new
-    end
-  end
+  # TODO: Refactor create after pundit implementation
+  # def create
+  #   @user = User.new(user_params)
+  #   if @user.save
+  #     flash[:success] = 'New users successfully created'
+  #     redirect_to users_url
+  #   else
+  #     flash.now[:danger] = 'User creation failed'
+  #     render :new
+  #   end
+  # end
 
   private
 
