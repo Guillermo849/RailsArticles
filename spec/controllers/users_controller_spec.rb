@@ -95,7 +95,9 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[PUT] #update' do
-    before { sign_in user }
+    before do
+      sign_in user
+    end
     let(:params) { { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
     context 'when valid params' do
       before do
