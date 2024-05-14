@@ -1,55 +1,44 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'factories/users'
-require 'factories/articles'
 
-RSpec.describe 'routes for Articles', type: :routing do
-  include Devise::Test::IntegrationHelpers
-
-  let(:user) do
-    create :user
-  end
-  let(:article) do
-    create :article
-  end
-
-  describe 'index' do
+RSpec.describe 'ArticlesController', type: :routing do
+  describe '[GET] #index' do
     it do
-      expect(get: "/users/#{user.id}/articles").to route_to('articles#index', user_id: user.id.to_s)
+      expect(get: '/users/1/articles').to route_to('articles#index', user_id: '1')
     end
   end
 
-  describe 'new' do
+  describe '[GET] #new' do
     it do
-      expect(get: "/users/#{user.id}/articles/new").to route_to('articles#new', user_id: user.id.to_s)
+      expect(get: '/users/1/articles/new').to route_to('articles#new', user_id: '1')
     end
   end
 
-  describe 'show' do
+  describe '[GET] #show' do
     it do
-      expect(get: "/users/#{user.id}/articles/#{article.id}").to route_to('articles#show', user_id: user.id.to_s,
-                                                                                           id: article.id.to_s)
+      expect(get: '/users/1/articles/2').to route_to('articles#show', user_id: '1',
+                                                                      id: '2')
     end
   end
 
-  describe 'create' do
+  describe '[POST] #create' do
     it do
-      expect(post: "/users/#{user.id}/articles").to route_to('articles#create', user_id: user.id.to_s)
+      expect(post: '/users/1/articles').to route_to('articles#create', user_id: '1')
     end
   end
 
-  describe 'edit' do
+  describe '[GET] #edit' do
     it do
-      expect(get: "/users/#{user.id}/articles/#{article.id}/edit").to route_to('articles#edit', user_id: user.id.to_s,
-                                                                                                id: article.id.to_s)
+      expect(get: '/users/1/articles/2/edit').to route_to('articles#edit', user_id: '1',
+                                                                           id: '2')
     end
   end
 
-  describe 'delete' do
+  describe '[DELETE] #delete' do
     it do
-      expect(delete: "/users/#{user.id}/articles/#{article.id}").to route_to('articles#destroy', user_id: user.id.to_s,
-                                                                                                 id: article.id.to_s)
+      expect(delete: '/users/1/articles/2').to route_to('articles#destroy', user_id: '1',
+                                                                            id: '2')
     end
   end
 end

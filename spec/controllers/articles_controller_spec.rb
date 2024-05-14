@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'factories/articles'
-require 'factories/users'
 
 RSpec.describe ArticlesController, type: :controller do
-  include Devise::Test::ControllerHelpers
-
   let!(:article) { create :article }
-  let!(:user) { create :user }
+  let(:user) { create :user }
 
   describe '[GET] #index' do
     before do
       sign_in user
-      get :index, params: { user_id: user.id } 
+      get :index, params: { user_id: user.id }
     end
 
     it do
@@ -34,7 +30,7 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context 'when article was not found' do
-      before { get :show, params: { user_id: user.id, id: 10_000 } }
+      before { get :show, params: { user_id: user.id, id: 'invalid' } }
 
       it do
         expect(response).to redirect_to(user_articles_path)
@@ -46,7 +42,7 @@ RSpec.describe ArticlesController, type: :controller do
   describe '[GET] #new' do
     before do
       sign_in user
-      get :new, params: { user_id: user.id } 
+      get :new, params: { user_id: user.id }
     end
 
     it do
@@ -57,11 +53,11 @@ RSpec.describe ArticlesController, type: :controller do
   describe '[POST] #create' do
     before { sign_in user }
     let(:params) do
-      { title: article.title, body: article.body, user_id: user.id }
+      { user_id: user.id, article: { title: article.title, body: article.body, user_id: user.id } }
     end
 
     context 'when article was created' do
-      before { post :create, params: { user_id: user.id, article: params } }
+      before { post :create, params: params }
 
       it do
         expect(Article.find_by(params[:article])).not_to be_nil
@@ -71,8 +67,8 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'when article was not created' do
       before do
-        params[:user_id] = nil
-        post :create, params: { user_id: user.id, article: params }
+        params[:article][:user_id] = nil
+        post :create, params: params
       end
 
       it do
@@ -94,7 +90,7 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context 'when article found' do
-      before { get :edit, params: { user_id: user.id, id: 10_000 } }
+      before { get :edit, params: { user_id: user.id, id: 'invalid' } }
 
       it do
         expect(flash[:danger]).to include('Article not found')
@@ -134,7 +130,7 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context 'delete a non-existent article' do
-      before { delete :destroy, params: { user_id: user.id, id: 10_000 } }
+      before { delete :destroy, params: { user_id: user.id, id: 'invalid' } }
 
       it do
         expect(flash[:danger]).to include('Article not found')

@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'factories/users'
 
-RSpec.describe 'routes for Users', type: :routing do
-  include Devise::Test::IntegrationHelpers
-
-  let(:user) do
-    create :user
-  end
-
-  describe 'index' do
+RSpec.describe 'UsersController', type: :routing do
+  describe '[GET] #index' do
     it { expect(get('/')).to route_to('users#index') }
   end
 
@@ -22,23 +15,23 @@ RSpec.describe 'routes for Users', type: :routing do
     it { expect(delete: '/users/sign_out').to route_to('devise/sessions#destroy') }
   end
 
-  describe 'new' do
+  describe '[GET] #new' do
     it { expect(get: '/users/new').to route_to('users#new') }
   end
 
-  describe 'show' do
-    it { expect(get: "/users/#{user.id}").to route_to('users#show', id: user.id.to_s) }
+  describe '[GET] #show' do
+    it { expect(get: '/users/1').to route_to('users#show', id: '1') }
   end
 
-  describe 'create' do
+  describe '[POST] #create' do
     it { expect(post: '/users').to route_to('devise/registrations#create') }
   end
 
-  describe 'edit' do
-    it { expect(get: "/users/#{user.id}/edit").to route_to('users#edit', id: user.id.to_s) }
+  describe '[GET] #edit' do
+    it { expect(get: '/users/1/edit').to route_to('users#edit', id: '1') }
   end
 
-  describe 'delete' do
-    it { expect(delete: "/users/#{user.id}").to route_to('users#destroy', id: user.id.to_s) }
+  describe '[DELETE] #delete' do
+    it { expect(delete: '/users/1').to route_to('users#destroy', id: '1') }
   end
 end

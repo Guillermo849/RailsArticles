@@ -1,5 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'factory_bot'
+require 'factories/articles'
+require 'factories/users'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -38,13 +41,9 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
-
   config.include FactoryBot::Syntax::Methods
-
   config.include Warden::Test::Helpers
-
   config.include Devise::Test::ControllerHelpers, type: :controller
-
   config.infer_spec_type_from_file_location!
 
   # You can uncomment this line to turn off ActiveRecord support entirely.

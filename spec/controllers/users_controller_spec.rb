@@ -1,15 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'factories/articles'
-require 'factories/users'
 
 RSpec.describe UsersController, type: :controller do
-  include Devise::Test::ControllerHelpers
-
-  let(:user) do
-    create :user
-  end
+  let(:user) { create :user }
 
   describe '[GET] #index' do
     before do
@@ -95,27 +89,26 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '[PUT] #update' do
+    let(:params) do
+      { id: user.id, user: { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
+    end
+
     before do
       sign_in user
+      put :update, params: params
     end
-    let(:params) { { first_name: 'NewFirstName', surname: 'NewSurname', age: 7 } }
-    context 'when valid params' do
-      before do
-        put :update, params: { id: user.id, user: params }
-      end
 
+    context 'when valid params' do
       it do
-        expect(User.find_by(*params[:user], id: user.id)).not_to be nil
+        expect(User.find_by(**params[:user], id: user.id)).not_to be nil
         expect(flash[:success]).to eq('User successfully updated')
       end
     end
 
     context 'when invalid params' do
       before do
-        put :update, params: {
-          id: user.id,
-          user: { first_name: nil, surname: 'NewSurname', age: 7 }
-        }
+        params[:user][:first_name] = nil
+        put :update, params: params
       end
 
       it do
@@ -127,6 +120,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe '[DELETE] #destroy' do
     let(:article) { build :article, user_id: user }
+
     context 'delete an existing user' do
       before do
         sign_in user
