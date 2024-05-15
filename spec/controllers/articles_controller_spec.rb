@@ -19,10 +19,12 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[GET] #show' do
-    before { sign_in user }
-    context 'when article was found' do
-      before { get :show, params: { user_id: user.id, id: article.id } }
+    before do
+      sign_in user
+      get :show, params: { user_id: user.id, id: article.id }
+    end
 
+    context 'when article was found' do
       it do
         expect(assigns(:article)).to eq(article)
         expect(response).to render_template('show')
@@ -51,14 +53,16 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[POST] #create' do
-    before { sign_in user }
     let(:params) do
       { user_id: user.id, article: { title: article.title, body: article.body, user_id: user.id } }
     end
 
-    context 'when article was created' do
-      before { post :create, params: params }
+    before do
+      sign_in user
+      post :create, params: params
+    end
 
+    context 'when article was created' do
       it do
         expect(Article.find_by(params[:article])).not_to be_nil
         expect(flash[:success]).to eq('New article successfully created')
@@ -79,10 +83,12 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[GET] #edit' do
-    before { sign_in user }
-    context 'when article found' do
-      before { get :edit, params: { user_id: user.id, id: article.id } }
+    before do
+      sign_in user
+      get :edit, params: { user_id: user.id, id: article.id }
+    end
 
+    context 'when article found' do
       it do
         expect(response).to render_template('edit')
         expect(assigns(:article)).to eq(article)
@@ -99,10 +105,12 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[PUT] #update' do
-    before { sign_in user }
-    context 'when params are valid' do
-      before { put :update, params: { user_id: user.id, id: article.id, article: { user_id: user.id } } }
+    before do
+      sign_in user
+      put :update, params: { user_id: user.id, id: article.id, article: { user_id: user.id } }
+    end
 
+    context 'when params are valid' do
       it do
         expect(flash[:success]).to include('Article successfully updated')
         expect(article.reload.user_id).to eq(user.id)
@@ -119,10 +127,12 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '[DELETE] #destroy' do
-    before { sign_in user }
-    context 'delete an existing article' do
-      before { delete :destroy, params: { user_id: user.id, id: article.id } }
+    before do
+      sign_in user
+      delete :destroy, params: { user_id: user.id, id: article.id }
+    end
 
+    context 'delete an existing article' do
       it do
         expect(flash[:success]).to include('Article successfully deleted')
         expect(Article.find_by(id: article.id)).to eq(nil)
