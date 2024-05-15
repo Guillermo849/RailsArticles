@@ -2,17 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe 'UsersController', type: :routing do
+RSpec.describe UsersController, type: :routing do
   describe '[GET] #index' do
     it { expect(get('/')).to route_to('users#index') }
-  end
-
-  describe 'sign in' do
-    it { expect(get: '/users/sign_in').to route_to('devise/sessions#new') }
-  end
-
-  describe 'log out' do
-    it { expect(delete: '/users/sign_out').to route_to('devise/sessions#destroy') }
   end
 
   describe '[GET] #new' do

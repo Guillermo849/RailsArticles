@@ -86,6 +86,13 @@ RSpec.describe UsersController, type: :controller do
         expect(assigns(:user)).to eq(user)
       end
     end
+
+    # TODO: when user found and not found test
+    # context 'when user not found' do
+    #   it do
+    #     expect(flash[:danger]).to include('User not found')
+    #   end
+    # end
   end
 
   describe '[PUT] #update' do

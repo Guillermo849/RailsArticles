@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'ArticlesController', type: :routing do
+RSpec.describe ArticlesController, type: :routing do
   describe '[GET] #index' do
     let(:path) {  '/users/1/articles' }
 
