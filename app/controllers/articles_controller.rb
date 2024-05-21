@@ -2,6 +2,7 @@
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: %i[show edit update destroy]
+  before_action :set_user, only: %i[show edit update destroy]
 
   def index
     @articles = Article.all
@@ -12,10 +13,18 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @user = current_user
+    authorize @article
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "Cannot access the article #{@article.title}"
+    redirect_to user_articles_path
   end
 
-  def show; end
+  def show
+    authorize @article
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "Cannot access the article #{@article.title}"
+    redirect_to user_articles_path
+  end
 
   def update
     if @article.update(article_params)
@@ -28,12 +37,16 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
+    authorize @article
     if @article.destroy
       flash[:success] = 'Article successfully deleted'
       redirect_to user_articles_url
     else
       flash[:danger] = "Article couldn't be deleted"
     end
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "Cannot access the article #{@article.title}"
+    redirect_to user_articles_path
   end
 
   def create
@@ -54,6 +67,10 @@ class ArticlesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:danger] = 'Article not found'
     redirect_to user_articles_url
+  end
+
+  def set_user
+    @user = current_user
   end
 
   def article_params

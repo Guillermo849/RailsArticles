@@ -7,6 +7,10 @@
   <%= f.text_field :surname %><br>
   <%= f.label :age %>
   <%= f.text_field :age %><br>
+  <% if current_user.admin %>
+    <%= f.label :admin %>
+    <%= f.check_box :admin %><br>
+  <% end %>
   <%= f.submit "Update User" %>
 <% end %>
 
