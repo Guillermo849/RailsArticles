@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  protect_from_forgery with: :null_session
-
   before_action :set_user, only: %i[destroy show edit update]
 
   def index
@@ -26,6 +24,7 @@ class UsersController < ApplicationController
   end
 
   def update
+    authorize @user
     if @user.update(user_params)
       flash[:success] = 'User successfully updated'
       redirect_to users_path
@@ -33,6 +32,9 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'User update failed'
       render :edit
     end
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "Cannot access the user #{@user.first_name}"
+    redirect_to users_path
   end
 
   def show
@@ -53,6 +55,7 @@ class UsersController < ApplicationController
 
   # TODO: Refactor create after pundit implementation
   def create
+    authorize current_user
     @user = User.new(new_user_params)
     if @user.save
       flash[:success] = 'New users successfully created'
@@ -61,6 +64,9 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'User creation failed'
       render :new
     end
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = 'Cannot create the user'
+    redirect_to users_path
   end
 
   private

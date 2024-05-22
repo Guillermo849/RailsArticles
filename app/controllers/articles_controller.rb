@@ -27,6 +27,7 @@ class ArticlesController < ApplicationController
   end
 
   def update
+    authorize @article
     if @article.update(article_params)
       flash[:success] = 'Article successfully updated'
       redirect_to user_article_path
@@ -34,6 +35,9 @@ class ArticlesController < ApplicationController
       flash.now[:danger] = 'Article update failed'
       render :edit
     end
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "Cannot access the article #{@article.title}"
+    redirect_to user_articles_path
   end
 
   def destroy

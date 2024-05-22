@@ -25,7 +25,7 @@
     <% end %>
 
   <% if current_user.admin %>
-    <%= link_to "New User", "users/new"%>
+    <%= link_to "New User", create_new_user_url, method: :get%>
   <% end%>
 
   <%= button_to "logout", destroy_user_session_path, method: :delete%>
