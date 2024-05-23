@@ -16,12 +16,7 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-  def edit
-    authorize @user
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "Cannot access the user #{@user.first_name}"
-    redirect_to users_path
-  end
+  def edit; end
 
   def update
     authorize @user
@@ -37,12 +32,7 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-  def show
-    @user = policy_scope(User).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Cannot access the user #{@user.first_name}"
-    redirect_to users_path
-  end
+  def show; end
 
   def destroy
     if @user.destroy
@@ -71,8 +61,12 @@ class UsersController < ApplicationController
 
   private
 
+  def users
+    policy_scope(User)
+  end
+
   def set_user
-    @user = User.find(params[:id])
+    @user = users.find(params[:id])
   end
 
   def user_params
@@ -81,5 +75,9 @@ class UsersController < ApplicationController
 
   def new_user_params
     params.require(:user).permit(:first_name, :surname, :age, :admin, :email, :password)
+  end
+
+  rescue_from Pundit::NotAuthorizedError, ActiveRecord::RecordNotFound do |exception|
+    render xml: exception, status: 404
   end
 end

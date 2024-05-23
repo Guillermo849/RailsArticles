@@ -5,26 +5,16 @@ class ArticlesController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
   def index
-    @articles = policy_scope(Article)
+    @articles = ArticlePolicy::Scope.new(current_user, Article).resolve
   end
 
   def new
     @article = Article.new
   end
 
-  def edit
-    authorize @article
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "Cannot access the article #{@article.title}"
-    redirect_to user_articles_path
-  end
+  def edit; end
 
-  def show
-    @article = policy_scope(Article).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Cannot access the article #{@article.title}"
-    redirect_to user_articles_path
-  end
+  def show; end
 
   def update
     authorize @article
@@ -66,11 +56,12 @@ class ArticlesController < ApplicationController
 
   private
 
+  def articles
+    policy_scope(Article)
+  end
+
   def set_article
-    @article = Article.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:danger] = 'Article not found'
-    redirect_to user_articles_url
+    @article = articles.find(params[:id])
   end
 
   def set_user
@@ -79,5 +70,9 @@ class ArticlesController < ApplicationController
 
   def article_params
     params.require(:article).permit(:title, :body, :user_id)
+  end
+
+  rescue_from Pundit::NotAuthorizedError, ActiveRecord::RecordNotFound do |exception|
+    render xml: exception, status: 404
   end
 end
