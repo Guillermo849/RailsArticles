@@ -43,7 +43,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # TODO: Refactor create after pundit implementation
   def create
     authorize current_user
     @user = User.new(new_user_params)
@@ -75,9 +74,5 @@ class UsersController < ApplicationController
 
   def new_user_params
     params.require(:user).permit(:first_name, :surname, :age, :admin, :email, :password)
-  end
-
-  rescue_from Pundit::NotAuthorizedError, ActiveRecord::RecordNotFound do |exception|
-    render xml: exception, status: 404
   end
 end

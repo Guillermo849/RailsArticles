@@ -25,9 +25,6 @@ class ArticlesController < ApplicationController
       flash.now[:danger] = 'Article update failed'
       render :edit
     end
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "Cannot access the article #{@article.title}"
-    redirect_to user_articles_path
   end
 
   def destroy
@@ -38,9 +35,6 @@ class ArticlesController < ApplicationController
     else
       flash[:danger] = "Article couldn't be deleted"
     end
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "Cannot access the article #{@article.title}"
-    redirect_to user_articles_path
   end
 
   def create
@@ -70,9 +64,5 @@ class ArticlesController < ApplicationController
 
   def article_params
     params.require(:article).permit(:title, :body, :user_id)
-  end
-
-  rescue_from Pundit::NotAuthorizedError, ActiveRecord::RecordNotFound do |exception|
-    render xml: exception, status: 404
   end
 end

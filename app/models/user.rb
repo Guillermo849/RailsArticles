@@ -5,4 +5,10 @@ class User < ApplicationRecord
   has_many :articles, dependent: :delete_all
   validates :first_name, :surname, :age, presence: true
   validates :age, numericality: { only_integer: true }, inclusion: { in: 1..120 }
+
+  def admin?
+    admin
+  end
+
+  delegate 'self.admin?', to: :user
 end

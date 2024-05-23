@@ -1,25 +1,25 @@
 class UserPolicy < ApplicationPolicy
   def show?
-    is_owner? || user.admin?
+    is_owner? || admin?
   end
 
   def edit?
-    is_owner? || user.admin?
+    is_owner? || admin?
   end
 
   def new?
-    user.admin?
+    admin?
   end
 
   def create?
-    user.admin?
+    admin?
   end
 
   def delete?
-    is_owner? || user.admin?
+    is_owner? || admin?
   end
 
-  class Scope < ApplicationPolicy::Scope
+  class Scope < Scope
     def resolve
       if user.admin?
         scope.all
