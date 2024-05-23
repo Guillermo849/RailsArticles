@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[destroy show edit update]
 
   def index
-    @users = User.all
+    @users = policy_scope(User)
   end
 
   def new
@@ -38,8 +38,8 @@ class UsersController < ApplicationController
   end
 
   def show
-    authorize @user
-  rescue Pundit::NotAuthorizedError
+    @user = policy_scope(User).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Cannot access the user #{@user.first_name}"
     redirect_to users_path
   end

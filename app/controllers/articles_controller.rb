@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
   def index
-    @articles = Article.all
+    @articles = policy_scope(Article)
   end
 
   def new
@@ -20,8 +20,8 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    authorize @article
-  rescue Pundit::NotAuthorizedError
+    @article = policy_scope(Article).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Cannot access the article #{@article.title}"
     redirect_to user_articles_path
   end
