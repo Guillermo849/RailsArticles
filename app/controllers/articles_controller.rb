@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
   def index
-    @articles = ArticlePolicy::Scope.new(current_user, Article).resolve
+    @articles = articles
   end
 
   def new

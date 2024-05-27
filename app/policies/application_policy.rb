@@ -36,6 +36,9 @@ class ApplicationPolicy
     false
   end
 
+  delegate :admin, to: :user
+# alias admin? admin
+
   class Scope
     def initialize(user, scope)
       @user = user
@@ -46,14 +49,12 @@ class ApplicationPolicy
       raise NoMethodError, "You must define #resolve in #{self.class}"
     end
 
+    protected
+
+    delegate :admin, to: :user
+
     private
 
     attr_reader :user, :scope
-  end
-
-  protected
-
-  def is_owner?
-    user == record
   end
 end

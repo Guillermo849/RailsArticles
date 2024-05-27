@@ -11,9 +11,6 @@ class UsersController < ApplicationController
     authorize current_user
     @user = User.new
     render :new
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "You aren't an admin"
-    redirect_to users_path
   end
 
   def edit; end
@@ -27,9 +24,6 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'User update failed'
       render :edit
     end
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = "Cannot access the user #{@user.first_name}"
-    redirect_to users_path
   end
 
   def show; end
@@ -53,9 +47,6 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'User creation failed'
       render :new
     end
-  rescue Pundit::NotAuthorizedError
-    flash[:alert] = 'Cannot create the user'
-    redirect_to users_path
   end
 
   private
