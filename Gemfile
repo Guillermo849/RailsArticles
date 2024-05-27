@@ -52,6 +52,8 @@ gem 'net-http', '~> 0.4.1'
 
 gem 'devise', '~> 4.9'
 
+gem 'pundit', '~> 2.3'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

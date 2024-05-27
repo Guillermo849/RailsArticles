@@ -4,10 +4,11 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[destroy show edit update]
 
   def index
-    @users = User.all
+    @users = policy_scope(User)
   end
 
   def new
+    authorize current_user
     @user = User.new
     render :new
   end
@@ -15,6 +16,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
+    authorize @user
     if @user.update(user_params)
       flash[:success] = 'User successfully updated'
       redirect_to users_path
@@ -35,25 +37,33 @@ class UsersController < ApplicationController
     end
   end
 
-  # TODO: Refactor create after pundit implementation
-  # def create
-  #   @user = User.new(user_params)
-  #   if @user.save
-  #     flash[:success] = 'New users successfully created'
-  #     redirect_to users_url
-  #   else
-  #     flash.now[:danger] = 'User creation failed'
-  #     render :new
-  #   end
-  # end
+  def create
+    authorize current_user
+    @user = User.new(new_user_params)
+    if @user.save
+      flash[:success] = 'New users successfully created'
+      redirect_to users_url
+    else
+      flash.now[:danger] = 'User creation failed'
+      render :new
+    end
+  end
 
   private
 
+  def users
+    policy_scope(User)
+  end
+
   def set_user
-    @user = current_user
+    @user = users.find(params[:id])
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :surname, :age)
+    params.require(:user).permit(:first_name, :surname, :age, :admin)
+  end
+
+  def new_user_params
+    params.require(:user).permit(:first_name, :surname, :age, :admin, :email, :password)
   end
 end

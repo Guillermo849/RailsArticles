@@ -8,4 +8,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'users#index'
+
+  get 'create_user' => 'users#new', as: :create_new_user
+  post 'create_user' => 'users#create', as: :create_user
 end

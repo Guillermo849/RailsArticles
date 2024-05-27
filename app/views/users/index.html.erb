@@ -3,15 +3,34 @@
 
   <%= link_to "Articles", user_articles_path(current_user.id)%>
 
-  <% @users.each do |user| %>
-      <p><%= link_to user.first_name, user_path(user.id) %> </p>
-  <% end %>
+    <% if current_user.admin? %>
+      <h2>Current Admin</h2>
+    <% else %>
+      <h2>Current User</h2>
+    <% end %>
+    <p><%= link_to current_user.first_name, user_path(current_user.id) %> </p>
 
-  <%= link_to "New User", "users/new"%>
+    <h2>Users</h2>
+    <% @users.each do |user| %>
+      <% if !user.admin && user != current_user %>
+        <p><%= link_to user.first_name, user_path(user.id) %> </p>
+      <% end %>
+    <% end %>
+
+    <h2>Admins</h2>
+    <% @users.each do |user| %>
+      <% if user.admin && user != current_user %>
+        <p><%= link_to user.first_name, user_path(user.id) %> </p>
+      <% end %>
+    <% end %>
+
+  <% if current_user.admin %>
+    <%= link_to "New User", create_new_user_url, method: :get%>
+  <% end%>
 
   <%= button_to "logout", destroy_user_session_path, method: :delete%>
 
-  <% flash.each do |type, msg| %>
+<% flash.each do |type, msg| %>
     <div class="alert alert-<%= type %> alert-dismissible">
       <%= msg %>
     </div>

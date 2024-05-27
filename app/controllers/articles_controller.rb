@@ -2,22 +2,22 @@
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: %i[show edit update destroy]
+  before_action :set_user, only: %i[show edit update destroy]
 
   def index
-    @articles = Article.all
+    @articles = articles
   end
 
   def new
     @article = Article.new
   end
 
-  def edit
-    @user = current_user
-  end
+  def edit; end
 
   def show; end
 
   def update
+    authorize @article
     if @article.update(article_params)
       flash[:success] = 'Article successfully updated'
       redirect_to user_article_path
@@ -28,6 +28,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
+    authorize @article
     if @article.destroy
       flash[:success] = 'Article successfully deleted'
       redirect_to user_articles_url
@@ -49,11 +50,16 @@ class ArticlesController < ApplicationController
 
   private
 
+  def articles
+    policy_scope(Article)
+  end
+
   def set_article
-    @article = Article.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:danger] = 'Article not found'
-    redirect_to user_articles_url
+    @article = articles.find(params[:id])
+  end
+
+  def set_user
+    @user = current_user
   end
 
   def article_params
