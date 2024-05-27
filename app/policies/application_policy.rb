@@ -37,7 +37,6 @@ class ApplicationPolicy
   end
 
   delegate :admin, to: :user
-# alias admin? admin
 
   class Scope
     def initialize(user, scope)
